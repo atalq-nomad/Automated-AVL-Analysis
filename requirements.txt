@@ -1,0 +1,16 @@
+# Pinned to the versions this pipeline was built and validated against.
+# Python 3.11.5.
+
+numpy==2.3.5
+trimesh==5.0.0
+PyYAML==6.0.3
+
+# Required by trimesh.mesh.section(), which stl_to_avl.py uses for every
+# spanwise station. trimesh imports them lazily, so without these the pipeline
+# fails partway through geometry extraction rather than at import time.
+scipy==1.17.1
+networkx==3.6.1
+
+# Test suite, including the Fixture D regression and the AVL working-directory
+# regression test.
+pytest==9.0.2

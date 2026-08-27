@@ -1,0 +1,12 @@
+oper
+a
+c 0.1471
+x
+ft
+totals.txt
+st
+stability.txt
+fs
+strips.txt
+
+quit

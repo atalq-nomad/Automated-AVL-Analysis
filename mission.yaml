@@ -1,0 +1,12 @@
+# Shared across ALL iterations. Changing anything here invalidates the
+# iteration-to-iteration comparison in running_log.md — bump a note in the log
+# if you do. Geometry-specific settings belong in cases/<name>.yaml instead.
+
+cruise_altitude_m: 12497      # FL410
+cruise_mach: 0.75
+mtom_kg: 7300
+cfe: 0.0030
+tsfc_kg_per_Ns: 6.63e-6
+tank_volume_m3: 10.0
+lh2_fill_fraction: 0.90
+lh2_density_kgm3: 70.8

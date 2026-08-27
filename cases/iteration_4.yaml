@@ -1,0 +1,26 @@
+# Per-case config: only geometry-specific settings. Anything that must stay
+# identical across iterations lives in mission.yaml.
+#
+# Relative paths resolve against the directory you run from (the project root).
+
+name: iteration_4
+stl_path: P1_revised1.stl
+avl_exe: avl352.exe
+
+units: mm                 # m | mm | in  — Onshape STL exports are mm
+axes: zxy                 # streamwise, spanwise, up.
+                          # Source x has extent 15.538 m = Bref of iterations 1-3, so
+                          # spanwise is source x; streamwise is z (10.227 m), up is y.
+
+n_sections: 21            # stl_to_avl defaults follow
+cluster: 1.6              # 1.0 uniform, higher clusters stations toward the root
+mach: 0.0                 # AVL Prandtl-Glauert; 0.0 matches iterations 1-3
+nchord: 14
+cspace: 1.0
+
+# Onshape mass-properties wetted area. Takes precedence over the mesh-derived
+# value in the CD0 build-up. Comment out to use the mesh value instead.
+# s_wet_override_m2: 151.3
+
+concept: P1
+iteration: 4

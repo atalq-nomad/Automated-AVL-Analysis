@@ -1,0 +1,21 @@
+# Regression fixture: reproduces avl_iter3/ from the STL that produced it.
+#
+# Settings verified against avl_iter3/bwb.avl itself:
+#   nchord 14, cspace 1.0 (SURFACE block), 21 SECTION cards, Mach 0.0000,
+#   station clustering consistent with cluster=1.6. All stl_to_avl defaults.
+#
+# Exists to prove the diag-dict parameter added to extract() in Stage 4 did not
+# change its output. Not an iteration — do not add to running_log.md.
+
+name: regression_iter3
+stl_path: P1_revised1.stl
+avl_exe: avl352.exe
+
+units: mm
+axes: zxy
+
+n_sections: 21
+cluster: 1.6
+mach: 0.0
+nchord: 14
+cspace: 1.0

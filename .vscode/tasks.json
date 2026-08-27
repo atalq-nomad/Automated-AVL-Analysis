@@ -1,0 +1,105 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run AVL case",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "pipeline/run_case.py",
+        "${input:caseConfig}",
+        "mission.yaml"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Full pipeline: geometry -> gate -> AVL -> log validation -> results.json + log entry."
+    },
+    {
+      "label": "Run AVL case (geometry only, skip AVL)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "pipeline/run_case.py",
+        "${input:caseConfig}",
+        "mission.yaml",
+        "--skip-avl"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "detail": "Stops after the geometry gate and run.txt. Use to check a new --axes value cheaply."
+    },
+    {
+      "label": "Compare iterations",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "pipeline/compare.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "detail": "Markdown table across every case's latest run, flagging >15% moves."
+    },
+    {
+      "label": "Run tests",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m",
+        "pytest",
+        "tests",
+        "-q"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "detail": "Full suite, including the Fixture D regression and the cwd regression test."
+    }
+  ],
+  "inputs": [
+    {
+      "id": "caseConfig",
+      "type": "pickString",
+      "description": "Which case config to run?",
+      "options": [
+        "cases/iteration_4.yaml",
+        "cases/regression_iter3.yaml"
+      ],
+      "default": "cases/iteration_4.yaml"
+    }
+  ]
+}

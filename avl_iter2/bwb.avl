@@ -1,0 +1,143 @@
+bwb
+0.0000                      | Mach
+0     0     0.0           | iYsym  iZsym  Zsym
+69.117779 7.016054 15.537735   | Sref Cref Bref
+4.235557 0.0 0.0   | Xref Yref Zref (25% MAC)
+0.0                       | CDp
+#
+SURFACE
+Centrebody_Wing
+14  1.0
+#
+YDUPLICATE
+0.0
+#
+ANGLE
+0.0
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+0.066653 0.000777 0.056751 10.263456 -4.8609  3  1.0
+AFILE
+sections/sec_00.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+0.071633 0.064822 0.054719 10.256906 -4.8769  3  1.0
+AFILE
+sections/sec_01.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+0.114127 0.194927 0.035503 10.212515 -5.0073  3  1.0
+AFILE
+sections/sec_02.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+0.221460 0.372212 0.023103 10.101035 -5.1302  3  1.0
+AFILE
+sections/sec_03.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+0.383152 0.589329 0.041197 9.929617 -5.1049  3  1.0
+AFILE
+sections/sec_04.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+0.605637 0.841864 0.068427 9.690582 -5.0542  3  1.0
+AFILE
+sections/sec_05.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+0.899244 1.126758 0.106697 9.366994 -4.9887  3  1.0
+AFILE
+sections/sec_06.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+1.273507 1.441717 0.167571 8.943500 -4.8833  3  1.0
+AFILE
+sections/sec_07.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+1.722785 1.784934 0.287446 8.393721 -4.4952  3  1.0
+AFILE
+sections/sec_08.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+2.284828 2.154933 0.315172 7.555695 -4.9047  3  1.0
+AFILE
+sections/sec_09.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+2.910795 2.550477 0.391425 6.207347 -5.2421  3  1.0
+AFILE
+sections/sec_10.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+3.582149 2.970510 0.489201 4.857343 -5.3720  3  1.0
+AFILE
+sections/sec_11.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+4.257208 3.414114 0.588497 3.765111 -5.2789  3  1.0
+AFILE
+sections/sec_12.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+4.892229 3.880480 0.675684 2.921121 -5.1636  3  1.0
+AFILE
+sections/sec_13.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+5.475116 4.368891 0.765134 2.349236 -4.6857  3  1.0
+AFILE
+sections/sec_14.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+5.998439 4.878703 0.850078 1.960711 -3.4514  3  1.0
+AFILE
+sections/sec_15.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+6.467765 5.409330 0.929191 1.658038 -1.2896  3  1.0
+AFILE
+sections/sec_16.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+6.891933 5.960244 1.002909 1.411305 0.7996  3  1.0
+AFILE
+sections/sec_17.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+7.280739 6.530957 1.067147 1.207483 3.1259  3  1.0
+AFILE
+sections/sec_18.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+7.642979 7.121022 1.127865 1.037647 5.1099  3  1.0
+AFILE
+sections/sec_19.dat
+#
+SECTION
+#Xle      Yle      Zle      Chord    Ainc   Nspan  Sspace
+7.983265 7.730023 1.183495 0.892203 4.6579  3  1.0
+AFILE
+sections/sec_20.dat
+#
