@@ -10,3 +10,67 @@ tsfc_kg_per_Ns: 6.63e-6
 tank_volume_m3: 10.0
 lh2_fill_fraction: 0.90
 lh2_density_kgm3: 70.8
+
+# ---------------------------------------------------------------------------
+# Stage 10 — reserve-based mission profile.
+# Defaults from mtom_and_reserve_range_methodology.md Part A. Every one of
+# these is a literature-typical or placeholder starting value, NOT a
+# program-validated number. All optional: delete any line to use the default.
+# ---------------------------------------------------------------------------
+
+# Mission segment weight fractions (Raymer-style, kerosene-turbine calibrated).
+f_taxi: 0.995
+f_takeoff: 0.995
+f_climb: 0.980
+f_descent: 0.990
+f_approach: 0.992             # applied at the destination AND at the alternate
+
+# Missed approach / go-around: fixed fuel mass, not distance-scaled.
+missed_approach_time_s: 120.0
+missed_approach_thrust_multiplier: 3.0   # PLACEHOLDER — not literature-sourced
+# missed_approach_fuel_kg: 12.0          # uncomment to override the above outright
+
+diversion_distance_nm: 100.0  # current industry practice; 200 = traditional NBAA
+hold_time_min: 45.0           # FAR 91.167 legal minimum
+hold_altitude_ft: 1500.0      # recorded only — see mission_profile.hold_fuel_kg()
+contingency_fraction: 0.05    # commercial practice, not a Part 91 requirement
+
+# The five fractions above are kerosene-calibrated: they encode roughly how much
+# ENERGY a segment needs. Applied directly as LH2 mass fractions they overstate
+# the burn by about the energy-density ratio (LH2 120 vs Jet-A 43 MJ/kg). This
+# rescales them to hold segment energy constant. Default TRUE — it fixes a
+# unit-consistency defect. Set false only to reproduce the uncorrected result.
+lhv_scaling_enabled: true
+lhv_kerosene_MJ_per_kg: 43.0
+lhv_lh2_MJ_per_kg: 120.0
+
+# ---------------------------------------------------------------------------
+# Stage 11 — mass model (Part B of the methodology doc).
+# SEVERAL OF THESE ARE UNSOURCED PLACEHOLDERS. See pipeline/mass_model.py's
+# header and the README placeholder list before quoting any MTOM from them.
+# ---------------------------------------------------------------------------
+
+mtom_cap_kg: 7300.0           # a GATE on the converged result, never an input to it
+mtom_tolerance: 0.001         # relative tolerance on the convergence loop
+
+payload_kg: 600.0             # 6-passenger payload per programme design brief,
+                              # at the 100 kg/occupant conceptual-design convention
+crew_kg: 200.0                # 2 crew x 100 kg. The CREW COUNT is genuinely open:
+                              # single-pilot certification is unresolved elsewhere
+                              # in the programme. 2 is the conservative assumption.
+
+eta_g_tank: 0.50              # PLACEHOLDER. LH2 tank gravimetric efficiency, between
+                              # near-term metallic (~0.30) and the 55-57% crossover
+                              # target. Highest-leverage number in the whole model.
+sigma_centerbody_kg_m2: 60.0  # PLACEHOLDER — CITATION NEEDED (Liebeck / NASA BWB
+                              # sizing report). Carries cabin + tank system.
+
+landing_gear_fraction: 0.035              # 3-4% of MTOM is literature-typical
+systems_fraction: 0.130                   # lumped: controls, avionics, electrical,
+                                          # hydraulics, ECS, furnishings
+engine_specific_weight_kg_per_kN: 19.0    # PLACEHOLDER: kerosene turbofan; LH2
+                                          # combustor engine mass is not public
+thrust_to_weight: 0.38
+propulsion_installation_factor: 1.40      # nacelles, pylons, accessories
+ultimate_load_factor: 3.75                # 1.5 x 2.5 limit
+centerbody_span_fraction: 0.35            # of half-span; see pipeline/planform.py

@@ -59,6 +59,49 @@ Each run writes to `outputs/<case name>/<timestamp>/`:
 Raw AVL output (`totals.txt`, `stability.txt`, `strips.txt`, `log.txt`) stays in the run
 directory too, including for rejected runs, so a failure is diagnosable.
 
+## MTOM and range, in one screen
+
+**MTOM is computed, not assumed.** A group weight buildup (centerbody, outer wing, gear,
+propulsion, systems, tank system) converges against payload, crew and fuel. The 7,300 kg
+figure is a **gate on the result, never an input** — a converged MTOM above it is a finding
+requiring redesign, not something to tune away.
+
+**Two range numbers are reported, and only one is for decisions.** Use
+`sizing.reserve_range` — it flies the full profile (taxi, takeoff, climb, cruise, descent,
+approach, missed approach, 45-min hold, 100 nm diversion, landing at the alternate) plus 5 %
+contingency, from the converged MTOM. The older `range` field is a quick single-segment
+Breguet with the whole tank burned in cruise; it runs about 45 % optimistic and is retained
+**only** so iterations logged before Stage 10 stay comparable, not because it is better.
+
+Reserves and contingency consume about **25 % of loaded fuel** — a real result, and a much
+larger bite than the same policy takes from a kerosene aircraft.
+
+> **Read the MTOM gate with its sensitivity table, not alone.** At the default σ the current
+> geometry passes by ~3 %, but the verdict flips inside the plausible range of *both*
+> unsourced inputs below. `results.json` carries `sizing.gate.verdict_decided: false` and
+> says UNDECIDED in words when that happens. It means "MTOM lands within a few percent of
+> the cap and which side is decided by numbers nobody has sourced" — not a settled pass.
+
+### Placeholders — do not mistake these for validated numbers
+
+- **σ, centerbody structural areal density (60 kg/m²)** — *ungrounded.* No citation at all;
+  not from Liebeck or the NASA BWB sizing report. Largest single term in the buildup (~40 %
+  of MTOM) and it flips the cap verdict. **Sourcing this is the highest-value open action.**
+- **η_g, LH2 tank gravimetric efficiency (0.50)** — bracketed by real programme figures
+  (~0.30 metallic, 0.55–0.57 target), but the midpoint is a choice, not a measurement. Also
+  flips the cap verdict.
+- **Engine specific weight (19 kg/kN)** — a kerosene turbofan figure. LH2-combustor engine
+  mass data is not public.
+- **Missed-approach fuel allowance** — 2 min at 3× cruise thrust. Not literature-sourced.
+- **Crew count (2 pilots)** — genuinely open: single-pilot certification is unresolved
+  elsewhere in the programme. Each crew member is 100 kg straight onto MTOM.
+- *Not* a placeholder: **payload = 600 kg**, the 6-passenger design brief at the standard
+  100 kg/occupant convention.
+
+Full explanation — segment sequence, the convergence loop, the PC-24 cross-check and the
+LHV-scaling correction — is in [docs/mtom_and_range.md](docs/mtom_and_range.md). The
+equations, parameter table and citations are in `mtom_and_reserve_range_methodology.md`.
+
 ## Don't change these without understanding why
 
 **The `cwd=output_dir` argument in `pipeline/avl_runner.py`.** AVL resolves the airfoil paths

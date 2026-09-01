@@ -52,6 +52,10 @@ class CaseConfig:
     # Onshape mass-properties wetted area. Takes precedence over the
     # mesh-derived value in the CD0 build-up when present (Stage 6).
     s_wet_override_m2: float | None = None
+    # Detailed tank-system mass from the separate tank-packaging analysis.
+    # Takes precedence over mass_model's eta_g proxy, exactly as
+    # s_wet_override_m2 takes precedence over the mesh-derived wetted area.
+    tank_system_mass_override_kg: float | None = None
     # Labels for the log entry header only; no effect on any calculation.
     # Both default to values derived from `name` (see concept_and_iteration).
     concept: str | None = None
@@ -98,6 +102,10 @@ class CaseConfig:
         kwargs["s_wet_override_m2"] = (
             None if s_wet is None else _coerce("s_wet_override_m2", s_wet, float, source)
         )
+        tank_over = data.get("tank_system_mass_override_kg")
+        kwargs["tank_system_mass_override_kg"] = (
+            None if tank_over is None
+            else _coerce("tank_system_mass_override_kg", tank_over, float, source))
         concept = data.get("concept")
         kwargs["concept"] = None if concept is None else str(concept).strip()
         iteration = data.get("iteration")
@@ -133,6 +141,11 @@ class CaseConfig:
                 f"{source}: mach must be in [0, 1) — AVL's Prandtl-Glauert correction is "
                 f"subsonic only, got {self.mach}"
             )
+        if (self.tank_system_mass_override_kg is not None
+                and self.tank_system_mass_override_kg < 0.0):
+            raise ValueError(
+                f"{source}: tank_system_mass_override_kg must be >= 0 when given, "
+                f"got {self.tank_system_mass_override_kg}")
         if self.s_wet_override_m2 is not None and self.s_wet_override_m2 <= 0.0:
             raise ValueError(
                 f"{source}: s_wet_override_m2 must be > 0 when given, got {self.s_wet_override_m2}"

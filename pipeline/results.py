@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from .mission import MissionConfig, compute_range
 from .parse_avl import check_static_margin_consistency, static_margin_pct
+from .sizing import converge_sizing
 
 
 def wetted_area(geometry: dict, s_wet_override_m2: float | None) -> tuple[float, str]:
@@ -45,7 +46,8 @@ def drag_buildup(cfe: float, s_wet_m2: float, sref_m2: float, cd_ind: float) -> 
 
 def build_results(*, case, mission: MissionConfig, totals: dict, stability: dict,
                   geometry: dict, cl_target: float, run_dir: str,
-                  timestamp: str, log_report: dict | None = None) -> dict:
+                  timestamp: str, log_report: dict | None = None,
+                  q_pa: float | None = None) -> dict:
     """Everything results.json holds, computed from parsed inputs."""
     sref = totals["Sref"]
     s_wet, s_wet_source = wetted_area(geometry, case.s_wet_override_m2)
@@ -58,6 +60,21 @@ def build_results(*, case, mission: MissionConfig, totals: dict, stability: dict
     sm_check = check_static_margin_consistency(stability)
 
     rng = compute_range(mission, l_over_d, cl_target=cl_target)
+
+    # Stage 12 — MTOM closure coupled to the reserve-based mission profile.
+    # Additive: every pre-Stage-12 field above is unchanged, so already-logged
+    # iterations stay comparable.
+    sizing = None
+    planform = geometry.get("planform")
+    if planform and q_pa:
+        try:
+            sizing = converge_sizing(
+                mission, planform, q_pa, l_over_d,
+                tank_mass_override_kg=getattr(case, "tank_system_mass_override_kg", None))
+        except (ValueError, KeyError) as exc:
+            sizing = {"error": f"{type(exc).__name__}: {exc}",
+                      "note": "Stage 12 sizing did not run; aero results above are unaffected."}
+
     concept, iteration = case.concept_and_iteration()
 
     return {
@@ -117,6 +134,13 @@ def build_results(*, case, mission: MissionConfig, totals: dict, stability: dict
             "Clr": stability["Clr"], "Cnr": stability["Cnr"],
         },
         "range": rng,
+        "range_model_note": (
+            "range above is the QUICK no-reserve estimate, kept for continuity with "
+            "iterations logged before Stage 10. For decisions use "
+            "sizing.reserve_range, which flies the full reserve profile from the "
+            "converged MTOM."
+        ),
+        "sizing": sizing,
         "avl_log": log_report,
         "drag_model_note": (
             "CD0 = Cfe*S_wet/Sref, flat-plate equivalent skin friction only. "

@@ -47,9 +47,15 @@ from pipeline.geometry_checks import (  # noqa: E402
     sref_disagreement_pct,
     summarise,
 )
-from pipeline.mission import MissionConfig, compute_cl_target, default_mission_path  # noqa: E402
+from pipeline.mission import (  # noqa: E402
+    MissionConfig,
+    compute_cl_target,
+    cruise_state,
+    default_mission_path,
+)
 from pipeline.parse_avl import AvlParseError, parse_stability, parse_totals  # noqa: E402
 from pipeline.paths import RunPaths, new_run_paths, update_latest_pointer  # noqa: E402
+from pipeline.planform import split_planform, stations_from_sections  # noqa: E402
 from pipeline.report import (  # noqa: E402
     append_running_log,
     find_previous_results,
@@ -96,7 +102,8 @@ def banner(title: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def build_geometry(case: CaseConfig, paths: RunPaths) -> tuple[dict, str]:
+def build_geometry(case: CaseConfig, paths: RunPaths,
+                   mission: MissionConfig) -> tuple[dict, str]:
     """Steps 2-3: run stl_to_avl into the run dir, collecting diagnostics."""
     banner("STEP 2/3 — geometry extraction (stl_to_avl.py)")
     print(f"  STL        : {case.stl_path}")
@@ -149,6 +156,11 @@ def build_geometry(case: CaseConfig, paths: RunPaths) -> tuple[dict, str]:
         # Wetted area from the mesh. The case config's s_wet_override_m2 takes
         # precedence over this in the CD0 build-up (Stage 6).
         "s_wet_mesh_m2": diag.get("mesh_area_m2"),
+        # Centerbody / outer-wing split, so Stage 11's wing regression runs on
+        # real outer-panel geometry rather than assumed values.
+        "planform": split_planform(
+            stations_from_sections(sections), float(sref),
+            mission.centerbody_span_fraction),
     })
     return diag, tee.text
 
@@ -273,7 +285,7 @@ def run(case_path: Path, mission_path: Path, *, skip_avl: bool = False,
     print(f"  output  : {paths.run_dir}")
 
     # -- Steps 2-3 ---------------------------------------------------------
-    diag, geometry_log = build_geometry(case, paths)
+    diag, geometry_log = build_geometry(case, paths, mission)
     paths.run_dir.joinpath("geometry_log.txt").write_text(geometry_log, encoding="utf-8")
 
     # -- Step 4 ------------------------------------------------------------
@@ -342,7 +354,7 @@ def run(case_path: Path, mission_path: Path, *, skip_avl: bool = False,
         case=case, mission=mission, totals=totals, stability=stability,
         geometry=summary["geometry"], cl_target=cl_target,
         run_dir=str(paths.run_dir), timestamp=stamp.isoformat(timespec="seconds"),
-        log_report=log_report.to_dict(),
+        log_report=log_report.to_dict(), q_pa=cruise_state(mission)["q_Pa"],
     )
     paths.results.write_text(json.dumps(results, indent=2, sort_keys=True),
                              encoding="utf-8")
